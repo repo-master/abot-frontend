@@ -1,4 +1,7 @@
 
+//TODO: Use axios
+//TODO: Use API Context
+
 class RESTChatConnection extends EventTarget {
   #endpoint
   constructor(endpoint) {
@@ -27,10 +30,12 @@ class RESTChatConnection extends EventTarget {
   }
   
   async sendMessage(message_data) {
-    const url_params = new URLSearchParams(message_data).toString();
-
-    return await fetch(`${this.#endpoint}?${url_params}`, {
-      "method": "POST"
+    return await fetch(this.#endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "text/json"
+      },
+      body: JSON.stringify(message_data)
     })
     .then(res => res.json())
     .then(data => this.#messageReceived(data));

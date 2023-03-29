@@ -1,17 +1,21 @@
 
-import React, { useEffect, useContext } from 'react';
+import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 
 import logo from './logo.svg';
 
-import ResponsiveAppBar from './components/ResponsiveAppBar';
-import { UserSessionContext, UserSessionProvider } from './UserSession';
+import { UserSessionProvider } from './UserSession';
+import { AuthContextProvider } from './AuthContext';
 
-//Pages
+/* Components */
+import ResponsiveAppBar from './components/ResponsiveAppBar';
+
+/* Pages */
 import LandingPage from './pages/landing';
 import ChatPage from './pages/chat';
 
+/* APIs */
 import io from 'socket.io-client';
 
 /* Chat */
@@ -25,35 +29,36 @@ const chat_handler = new RESTChatConnection("http://localhost:8000/chat");
 
 
 function SampleApp() {
-  const [sessionData, setSessionData, updateUserData] = useContext(UserSessionContext);
+  //const [sessionData, setSessionData, updateUserData] = useContext(UserSessionContext);
 
-  const createGuestSession = () =>
-    updateUserData({
-      user_name: "guest",
-      user_id: uuidv4(),
-      session_id: uuidv4()
-    });
+  // const createGuestSession = () =>
+  //   updateUserData({
+  //     auth_token: null,
+  //     user_id: "guest"
+  //   });
 
-  useEffect(() => {
-    if (!sessionData || sessionData.session_id === undefined) {
-      createGuestSession();
-    }
-  }, [sessionData]);
+  // useEffect(() => {
+  //   if (!sessionData || sessionData.auth_token === undefined) {
+  //     createGuestSession();
+  //   }
+  // }, [sessionData]);
 
   return (
     <div className='app' >
-      <ResponsiveAppBar />
+      <AuthContextProvider>
+        <ResponsiveAppBar />
 
-      <Routes>
-        <Route exact path='/' element={<LandingPage />} />
-        <Route exact path='/chat' element={<ChatPage />} />
-      </Routes>
+        <Routes>
+          <Route exact path='/' element={<LandingPage />} />
+          <Route exact path='/chat' element={<ChatPage />} />
+        </Routes>
 
-      <ChatWidget
-        title={"Abot"}
-        chatConnection={chat_handler}
-        profileAvatar={logo}
-        />
+        <ChatWidget
+          title={"Abot"}
+          chatConnection={chat_handler}
+          profileAvatar={logo}
+          />
+      </AuthContextProvider>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Widget, addResponseMessage, isWidgetOpened, toggleMsgLoader } from 'react-chat-widget';
-import { UserSessionContext } from '../UserSession';
+
+import AuthContext from '../AuthContext';
 
 import Fab from '@mui/material/Fab'
 import ChatIcon from '@mui/icons-material/Chat'
@@ -30,13 +31,13 @@ export default function ChatWidget(props) {
   subtitle ??= "Smart Assistant";
 
   const [chatSession, setChatSession] = useState({});
-  const [sessionData] = useContext(UserSessionContext);
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
     setChatSession({
-      sender_id: sessionData.user_id || null
+      sender_id: user.user_name || "_"
     });
-  }, [sessionData]);
+  }, [user]);
 
   const sendChatMessage = async message => {
     if (chatConnection !== undefined) {
