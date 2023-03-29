@@ -1,52 +1,72 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useContext } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
 import logo from './logo.svg';
 
 import ResponsiveAppBar from './components/ResponsiveAppBar';
+import { UserSessionContext, UserSessionProvider } from './UserSession';
 
-/* Chat */
-import ChatWidget, { addResponseMessage } from './components/ChatWidget';
+//Pages
+import LandingPage from './pages/landing';
+import ChatPage from './pages/chat';
+
 import io from 'socket.io-client';
 
+/* Chat */
+import ChatWidget from './components/ChatWidget';
+import { SocketIOChatConnection, RESTChatConnection } from './api/chat-rasa';
+
 //Connect to chat socket server endpoint
-const socket = io("ws://localhost:8080/");
+//const socket = io("ws://localhost:8080/");
+//const chat_handler = new SocketIOChatConnection(socket);
+const chat_handler = new RESTChatConnection("http://localhost:8000/chat");
 
-function App() {
-  //Can be used to disable the box, or show 'offline'/'online' icon (green or red dot)
-  // const [isConnected, setIsConnected] = useState(socket.connected);
 
-  const handleNewUserMessage = (newMessage) => {
-    socket.send(newMessage);
-    //TODO: Use Namespace
-  };
+function SampleApp() {
+  const [sessionData, setSessionData, updateUserData] = useContext(UserSessionContext);
+
+  const createGuestSession = () =>
+    updateUserData({
+      user_name: "guest",
+      user_id: uuidv4(),
+      session_id: uuidv4()
+    });
 
   useEffect(() => {
-    socket.on('message', message => {
-      console.log("Received", message)
-      addResponseMessage(message);
-    });
-  }, []);
+    if (!sessionData || sessionData.session_id === undefined) {
+      createGuestSession();
+    }
+  }, [sessionData]);
 
   return (
-    <div className="App">
+    <div className='app' >
       <ResponsiveAppBar />
-      <Container maxWidth="xl">
-        <Box sx={{ my: 4 }}>
-          <Typography variant="h4" component="h1" gutterBottom>
-            Landing page
-          </Typography>
-        </Box>
-      </Container>
+
+      <Routes>
+        <Route exact path='/' element={<LandingPage />} />
+        <Route exact path='/chat' element={<ChatPage />} />
+      </Routes>
 
       <ChatWidget
-        handleNewUserMessage={handleNewUserMessage}
+        title={"Abot"}
+        chatConnection={chat_handler}
         profileAvatar={logo}
         />
     </div>
+  );
+}
+
+function App() {
+  return (
+      <UserSessionProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path={"/*"} element={<SampleApp />} />
+          </Routes>
+        </BrowserRouter>
+      </UserSessionProvider>
   );
 }
 
