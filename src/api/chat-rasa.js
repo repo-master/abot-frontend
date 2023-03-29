@@ -1,6 +1,5 @@
 
-//TODO: Use axios
-//TODO: Use API Context
+import api from ".";
 
 class RESTChatConnection extends EventTarget {
   #endpoint
@@ -8,13 +7,13 @@ class RESTChatConnection extends EventTarget {
     super();
     this.#endpoint = endpoint;
     if (this.#endpoint === undefined)
-    this.#endpoint = "/chat";
+      this.#endpoint = "/chat";
   }
-  
+
   get endpoint() {
     return this.#endpoint;
   }
-  
+
   set endpoint(endpoint) {
     this.#endpoint = endpoint;
     //TODO: Add checks
@@ -28,17 +27,10 @@ class RESTChatConnection extends EventTarget {
     message_data.forEach(msg => this.dispatchEvent(new CustomEvent("chat-response", {detail: msg})));
     return message_data;
   }
-  
+
   async sendMessage(message_data) {
-    return await fetch(this.#endpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type": "text/json"
-      },
-      body: JSON.stringify(message_data)
-    })
-    .then(res => res.json())
-    .then(data => this.#messageReceived(data));
+    return await api.post(this.#endpoint, message_data)
+      .then(res => this.#messageReceived(res.data));
   }
 }
 

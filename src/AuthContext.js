@@ -1,5 +1,5 @@
 /**
- * Handles user data and authentication tokens within the current session,
+ * Handles user data and authentication tokens within the current client session,
  * and provides methods of authentication.
  */
 
@@ -8,7 +8,7 @@ import { useContext, createContext, useState, useEffect } from 'react';
 
 import { useJwt } from "react-jwt";
 
-import UserSessionContext from './UserSession';
+import ClientSessionContext from './ClientSessionContext';
 
 //APIs
 import { authenticate } from './api/auth';
@@ -16,7 +16,7 @@ import { authenticate } from './api/auth';
 const AuthContext = createContext();
  
 export const AuthContextProvider = ({ children }) => {
-  const [ sessionData, setSessionData, updateUserData ] = useContext(UserSessionContext);
+  const [ sessionData, setSessionData, updateSessionData ] = useContext(ClientSessionContext);
   const { decodedToken, isExpired } = useJwt(sessionData.auth_token);
 
   const [ user, setUser ] = useState({});
@@ -34,7 +34,7 @@ export const AuthContextProvider = ({ children }) => {
 
   const login = async (payload) => {
     const apiResponse = await authenticate(payload);
-    updateUserData({
+    updateSessionData({
       auth_token: apiResponse.data.access_token
     });
   };

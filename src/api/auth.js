@@ -1,11 +1,9 @@
 
-import axios from "axios";
-
-//TODO: Use API Context
+import api from ".";
 
 export async function authenticate(payload) {
-  return await axios.post(
-    "http://localhost:8000/auth/login",
+  return await api.post(
+    "/auth/login",
     payload
   );
 }

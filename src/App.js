@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import logo from './logo.svg';
 
-import { UserSessionProvider } from './UserSession';
+import { ClientSessionProvider } from './ClientSessionContext';
 import { AuthContextProvider } from './AuthContext';
 
 /* Components */
@@ -25,24 +25,10 @@ import { SocketIOChatConnection, RESTChatConnection } from './api/chat-rasa';
 //Connect to chat socket server endpoint
 //const socket = io("ws://localhost:8080/");
 //const chat_handler = new SocketIOChatConnection(socket);
-const chat_handler = new RESTChatConnection("http://localhost:8000/chat");
+const chat_handler = new RESTChatConnection();
 
 
 function SampleApp() {
-  //const [sessionData, setSessionData, updateUserData] = useContext(UserSessionContext);
-
-  // const createGuestSession = () =>
-  //   updateUserData({
-  //     auth_token: null,
-  //     user_id: "guest"
-  //   });
-
-  // useEffect(() => {
-  //   if (!sessionData || sessionData.auth_token === undefined) {
-  //     createGuestSession();
-  //   }
-  // }, [sessionData]);
-
   return (
     <div className='app' >
       <AuthContextProvider>
@@ -65,13 +51,13 @@ function SampleApp() {
 
 function App() {
   return (
-      <UserSessionProvider>
+      <ClientSessionProvider>
         <BrowserRouter>
           <Routes>
             <Route path={"/*"} element={<SampleApp />} />
           </Routes>
         </BrowserRouter>
-      </UserSessionProvider>
+      </ClientSessionProvider>
   );
 }
 
