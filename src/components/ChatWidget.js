@@ -42,7 +42,7 @@ export default function ChatWidget(props) {
   const sendChatMessage = async message => {
     if (chatConnection !== undefined) {
       const message_data = {
-        "message": message,
+        "text": message,
         "sender_id": chatSession.sender_id
       };
       await chatConnection.sendMessage(message_data)
@@ -51,10 +51,16 @@ export default function ChatWidget(props) {
   };
 
   const recvChatMessage = e => {
+    if (e.detail === null) {
+      addResponseMessage(`Sorry! There was a problem generating the response. Please report this issue to the developers at [phAIdelta.com](https://www.phaidelta.com/).`);
+      return;
+    }
+
     if (e.detail.text !== undefined)
       addResponseMessage(e.detail.text);
     if (e.detail.image !== undefined)
       addResponseMessage(`![image](${e.detail.image})`);
+    //TODO: Add buttons, quick response, etc.
   };
 
   const toggleTypingDots = () => {};//toggleMsgLoader();
@@ -74,6 +80,10 @@ export default function ChatWidget(props) {
     const cleanup = setupConnectionEvents(chatConnection);
     return c => c && cleanup(c);
   }, [chatConnection]);
+
+  useEffect(() => {
+    addResponseMessage("Hi! I am Abot! Ask me anything!");
+  }, [])
 
   return (
     <Widget

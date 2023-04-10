@@ -24,6 +24,11 @@ class RESTChatConnection extends EventTarget {
   }
 
   #messageReceived(message_data) {
+    if (!Array.isArray(message_data) || message_data.length === 0) {
+      this.dispatchEvent(new CustomEvent("chat-response", {detail: null}));
+      return message_data;
+    }
+
     message_data.forEach(msg => this.dispatchEvent(new CustomEvent("chat-response", {detail: msg})));
     return message_data;
   }
