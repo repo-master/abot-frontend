@@ -1,6 +1,5 @@
-# Start up a Development server. Please use nginx and use `npm run build` for production.
-
-FROM node:alpine
+# Start up a Development server. Please use nginx and use `npm run build` for production (Dockerfile.prod).
+FROM node:18-alpine
 
 WORKDIR /app
 

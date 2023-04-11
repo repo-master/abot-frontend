@@ -11,6 +11,7 @@
     "react": "^17.0.2",
     "react-auth-kit": "^2.8.2",
     "react-chat-widget": "^3.1.4",
+    "react-chatbot-kit": "^2.1.2",
     "react-dom": "^17.0.2",
     "react-jwt": "^1.1.8",
     "react-router": "^6.9.0",
