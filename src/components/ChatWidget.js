@@ -1,3 +1,4 @@
+
 import React, { useState, useContext, useEffect } from 'react';
 import { Widget, addResponseMessage, isWidgetOpened, toggleMsgLoader } from 'react-chat-widget';
 
@@ -39,13 +40,45 @@ export default function ChatWidget(props) {
     });
   }, [user]);
 
+  // HACK: Since only `toggle` method is there, I'm also using is_dots_visible flag to know if the dots are visible
+  let show_dots_timer = null;
+  let is_dots_visible = false;
+  let hide_dots_timer = null;
+  const hideTypingDots = () => {
+    if (hide_dots_timer === null) {
+      hide_dots_timer = setTimeout(() => {
+        if (is_dots_visible) {
+          console.log("Hiding")
+          toggleMsgLoader();
+          is_dots_visible = false;
+        }
+        hide_dots_timer = null;
+      }, 250);
+    }
+    if (show_dots_timer !== null) {
+      clearTimeout(show_dots_timer);
+      show_dots_timer = null;
+    }
+  };
+  const typingDotsEvent = () => {
+    if (!is_dots_visible) {
+      // Show dots
+      toggleMsgLoader();
+      is_dots_visible = true;
+    }
+    // Reset timer to count down again
+    clearTimeout(show_dots_timer);
+    show_dots_timer = setTimeout(hideTypingDots, 3000);
+  };
+
   const sendChatMessage = async message => {
     if (chatConnection !== undefined) {
       const message_data = {
         "text": message,
         "sender_id": chatSession.sender_id
       };
-      await chatConnection.sendMessage(message_data)
+      typingDotsEvent();
+      await chatConnection.sendMessage(message_data);
     }
     //TODO: Handle failed cases
   };
@@ -56,23 +89,21 @@ export default function ChatWidget(props) {
       return;
     }
 
-    if (e.detail.text !== undefined)
+    hideTypingDots();
+
+    if (e.detail.text !== undefined && e.detail.text !== null )
       addResponseMessage(e.detail.text);
-    if (e.detail.image !== undefined)
+    if (e.detail.image !== undefined && e.detail.image !== null)
       addResponseMessage(`![image](${e.detail.image})`);
     //TODO: Add buttons, quick response, etc.
   };
 
-  const toggleTypingDots = () => {};//toggleMsgLoader();
-
   const setupConnectionEvents = conn => {
     conn.addEventListener("chat-response", recvChatMessage);
-    conn.addEventListener("typing-start", toggleTypingDots);
-    conn.addEventListener("typing-stop", toggleTypingDots);
+    conn.addEventListener("typing", typingDotsEvent);
     return conn_old => {
       conn_old.removeEventListener("chat-response", recvChatMessage);
-      conn_old.removeEventListener("typing-start", toggleTypingDots);
-      conn_old.removeEventListener("typing-stop", toggleTypingDots);
+      conn_old.removeEventListener("typing", typingDotsEvent);
     };
   };
 
@@ -93,6 +124,6 @@ export default function ChatWidget(props) {
       launcher={CustomLauncherFab}
       emojis={false}
       {...rest}
-      />
+    />
   );
 }
