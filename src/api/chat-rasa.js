@@ -62,8 +62,8 @@ class SocketIOChatConnection extends EventTarget {
 
   #receiptMeta(data) {
     switch (data.action) {
-      case 'typing-start':
-      case 'typing-stop':
+      case 'typing':
+      //Add cases for other actions supported
         this.dispatchEvent(new CustomEvent(data.action, {detail: data}));
         break;
     }
