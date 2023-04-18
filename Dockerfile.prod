@@ -6,6 +6,9 @@ WORKDIR /app
 # Add the node_modules (that will be created soon) to PATH
 ENV PATH=/app/node_modules/.bin:$PATH
 
+# Build environment
+ARG REACT_APP_API_ENDPOINT=$REACT_APP_API_ENDPOINT
+
 COPY package.json ./
 COPY package-lock.json ./
 
