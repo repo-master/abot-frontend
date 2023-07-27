@@ -19,13 +19,13 @@ const ClientSessionContext = createContext();
  * @returns 
  */
 export const ClientSessionProvider = (props) => {
-  const { key, initialValue } = props;
-  const session_hook = useUpdatableObject(useSessionStorage, key || "session-data", initialValue || {});
-  return (
-    <ClientSessionContext.Provider value={session_hook}>
-      {props.children}
-    </ClientSessionContext.Provider>
-  );
+	const { key, initialValue } = props;
+	const session_hook = useUpdatableObject(useSessionStorage, key || "session-data", initialValue || {});
+	return (
+		<ClientSessionContext.Provider value={session_hook}>
+			{props.children}
+		</ClientSessionContext.Provider>
+	);
 }
 
 /**
@@ -36,13 +36,13 @@ export const ClientSessionProvider = (props) => {
  * @returns 
  */
 export const ClientLocalProvider = (props) => {
-  const { key, initialValue } = props;
-  const session_hook = useUpdatableObject(useLocalStorage, key || "session-data", initialValue || {});
-  return (
-    <ClientSessionContext.Provider value={session_hook}>
-      {props.children}
-    </ClientSessionContext.Provider>
-  );
+	const { key, initialValue } = props;
+	const session_hook = useUpdatableObject(useLocalStorage, key || "session-data", initialValue || {});
+	return (
+		<ClientSessionContext.Provider value={session_hook}>
+			{props.children}
+		</ClientSessionContext.Provider>
+	);
 }
 
 export default ClientSessionContext;

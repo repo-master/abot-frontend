@@ -12,42 +12,42 @@ import ClientSessionContext from './ClientSessionContext';
 
 //APIs
 import { authenticate } from './api/auth';
- 
+
 const AuthContext = createContext();
- 
+
 export const AuthContextProvider = ({ children }) => {
-  const [ sessionData, setSessionData, updateSessionData ] = useContext(ClientSessionContext);
-  const { decodedToken, isExpired } = useJwt(sessionData.auth_token);
+	const [sessionData, setSessionData, updateSessionData] = useContext(ClientSessionContext);
+	const { decodedToken, isExpired } = useJwt(sessionData.auth_token);
 
-  //TODO: Delegate the following to a different method or class
-  const [ user, setUser ] = useState({});
+	//TODO: Delegate the following to a different method or class
+	const [user, setUser] = useState({});
 
-  useEffect(() => {
-    if (decodedToken && !isExpired)
-      setUser({
-        user_name: decodedToken.user_name,
-        is_authenticated: true
-      });
-    else
-      setUser({
-        user_name: null,
-        is_authenticated: false
-      });
-  }, [decodedToken, isExpired]);
+	useEffect(() => {
+		if (decodedToken && !isExpired)
+			setUser({
+				user_name: decodedToken.user_name,
+				is_authenticated: true
+			});
+		else
+			setUser({
+				user_name: null,
+				is_authenticated: false
+			});
+	}, [decodedToken, isExpired]);
 
-  //TODO: Validate the token that is received
-  const login = async (payload) => {
-    const apiResponse = await authenticate(payload);
-    updateSessionData({
-      auth_token: apiResponse.data.access_token
-    });
-  };
+	//TODO: Validate the token that is received
+	const login = async (payload) => {
+		const apiResponse = await authenticate(payload);
+		updateSessionData({
+			auth_token: apiResponse.data.access_token
+		});
+	};
 
-  return (
-    <AuthContext.Provider value={{ user, login }}>
-      {children}
-    </AuthContext.Provider>
-  );
+	return (
+		<AuthContext.Provider value={{ user, login }}>
+			{children}
+		</AuthContext.Provider>
+	);
 };
- 
+
 export default AuthContext;

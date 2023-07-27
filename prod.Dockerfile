@@ -7,13 +7,12 @@ WORKDIR /app
 ENV PATH=/app/node_modules/.bin:$PATH
 
 # Build environment
-ARG REACT_APP_API_ENDPOINT=$REACT_APP_API_ENDPOINT
+ARG REACT_APP_API_ENDPOINT
 
 COPY package.json ./
 COPY package-lock.json ./
 
 RUN npm ci --silent
-RUN npm install react-scripts@3.4.1 -g --silent
 
 # Copy app source
 COPY . ./

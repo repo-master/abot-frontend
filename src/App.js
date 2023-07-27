@@ -1,9 +1,8 @@
 
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { v4 as uuidv4 } from 'uuid';
 
-import logo from './logo.svg';
+import abot_logo from './abot-chat-agent.png';
 
 import { ClientSessionProvider } from './ClientSessionContext';
 import { AuthContextProvider } from './AuthContext';
@@ -19,8 +18,19 @@ import ChatPage from './pages/chat';
 import io from 'socket.io-client';
 
 /* Chat */
-import ChatWidget from './components/ChatWidget';
+import { ChatBotWidget } from 'react-simple-chatbot';
 import { SocketIOChatConnection, RESTChatConnection } from './api/chat-rasa';
+
+/* UI */
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+
+
+const darkTheme = createTheme({
+	palette: {
+		mode: 'dark',
+	},
+});
 
 //Connect to chat socket server endpoint
 //const socket = io("ws://localhost:8080/");
@@ -29,36 +39,57 @@ const chat_handler = new RESTChatConnection();
 
 
 function SampleApp() {
-  return (
-    <div className='app' >
-      <AuthContextProvider>
-        <ResponsiveAppBar />
+	const handleUserSend = async (message) => {
+		let response_promise = chat_handler.sendMessage(message.content);
+		return async function*() {
+			for (let msg of await response_promise) {
+				yield msg;
+			}
+			// yield new Promise(r => setTimeout(() => r("Hello"), 2000));
+		};
+	};
 
-        <Routes>
-          <Route exact path='/' element={<LandingPage />} />
-          <Route exact path='/chat' element={<ChatPage />} />
-        </Routes>
+	return (
+		<div className='app' >
+			<AuthContextProvider>
+				<ThemeProvider theme={darkTheme}>
+					<CssBaseline />
+					<ResponsiveAppBar appTitle={"Abot"} />
 
-        <ChatWidget
-          title={"Abot"}
-          chatConnection={chat_handler}
-          profileAvatar={logo}
-          />
-      </AuthContextProvider>
-    </div>
-  );
+					<Routes>
+						<Route exact path='/' element={<LandingPage />} />
+						<Route exact path='/chat' element={<ChatPage />} />
+					</Routes>
+
+					<ChatBotWidget
+						headerTitle={"Abot chat"}
+						placeholder={"Enter your query..."}
+						botAvatar={abot_logo}
+						initialMessages={[
+							{
+								message: 'How may I help you?'
+							}
+						]}
+						recognitionEnable={true}
+						floating={true}
+						onUserSend={handleUserSend}
+					/>
+				</ThemeProvider>
+			</AuthContextProvider>
+		</div>
+	);
 }
 
 function App() {
-  return (
-      <ClientSessionProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path={"/*"} element={<SampleApp />} />
-          </Routes>
-        </BrowserRouter>
-      </ClientSessionProvider>
-  );
+	return (
+		<ClientSessionProvider>
+			<BrowserRouter>
+				<Routes>
+					<Route path={"/*"} element={<SampleApp />} />
+				</Routes>
+			</BrowserRouter>
+		</ClientSessionProvider>
+	);
 }
 
 export default App;

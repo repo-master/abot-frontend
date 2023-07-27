@@ -1,0 +1,3 @@
+[submodule "libs/react-simple-chatbot"]
+	path = libs/react-simple-chatbot
+	url = https://github.com/nb-programmer/react-simple-chatbot.git
