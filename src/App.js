@@ -40,10 +40,10 @@ const chat_handler = new RESTChatConnection();
 
 function SampleApp() {
 	const handleUserSend = async (message) => {
-		let response_promise = chat_handler.sendMessage(message.content);
 		return async function*() {
-			for (let msg of await response_promise) {
-				yield msg;
+			let response_promise = await chat_handler.sendMessage(message.content);
+			for (let msg of response_promise) {
+				yield new Promise((res, rej) => res(msg));
 			}
 			// yield new Promise(r => setTimeout(() => r("Hello"), 2000));
 		};
