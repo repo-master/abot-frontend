@@ -9,6 +9,7 @@ import { AuthContextProvider } from './AuthContext';
 
 /* Components */
 import ResponsiveAppBar from './components/ResponsiveAppBar';
+import { ChatBotWidget } from './ChatWidgetStreamlit';
 
 /* Pages */
 import LandingPage from './pages/landing';
@@ -18,7 +19,7 @@ import ChatPage from './pages/chat';
 import io from 'socket.io-client';
 
 /* Chat */
-import { ChatBotWidget } from 'react-simple-chatbot';
+// import { ChatBotWidget } from 'react-simple-chatbot';
 import { SocketIOChatConnection, RESTChatConnection } from './api/chat-rasa';
 
 /* UI */
@@ -36,6 +37,7 @@ const darkTheme = createTheme({
 //const socket = io("ws://localhost:8080/");
 //const chat_handler = new SocketIOChatConnection(socket);
 const chat_handler = new RESTChatConnection();
+
 
 
 function SampleApp() {
@@ -58,21 +60,20 @@ function SampleApp() {
 
 					<Routes>
 						<Route exact path='/' element={<LandingPage />} />
-						<Route exact path='/chat' element={<ChatPage />} />
 					</Routes>
 
 					<ChatBotWidget
-						headerTitle={"Abot chat"}
-						placeholder={"Enter your query..."}
-						botAvatar={abot_logo}
-						initialMessages={[
-							{
-								message: 'How may I help you?'
-							}
-						]}
-						recognitionEnable={true}
-						floating={true}
-						onUserSend={handleUserSend}
+						// headerTitle={"Abot chat"}
+						// placeholder={"Enter your query..."}
+						// botAvatar={abot_logo}
+						// initialMessages={[
+						// 	{
+						// 		message: 'How may I help you?'
+						// 	}
+						// ]}
+						// recognitionEnable={true}
+						// floating={true}
+						// onUserSend={handleUserSend}
 					/>
 				</ThemeProvider>
 			</AuthContextProvider>
