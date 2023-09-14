@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FloatButton, ChatBotContainer, Header, HeaderTitle } from 'react-simple-chatbot';
+import { FloatButton, ChatBotContainer, Header, HeaderTitle } from './react-simple-chatbot';
 import ChatIcon from '@mui/icons-material/Chat';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
