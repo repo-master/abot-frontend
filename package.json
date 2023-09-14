@@ -15,7 +15,7 @@
     "react-router": "",
     "react-router-dom": "",
     "react-scripts": "",
-    "react-simple-chatbot": "https://github.com/nb-programmer/react-simple-chatbot.git#3f0f36e356ff9fec4cd6d460b571774109b27ee3",
+    "react-simple-chatbot": "file:libs/react-simple-chatbot",
     "socket.io-client": "",
     "usehooks-ts": "",
     "uuid": "",

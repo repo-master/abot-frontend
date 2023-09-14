@@ -1,19 +1,37 @@
 import React, { useState } from 'react';
-import { FloatButton, FloatingIcon, ChatIcon } from 'react-simple-chatbot';
+import { FloatButton, ChatBotContainer, Header, HeaderTitle } from 'react-simple-chatbot';
+import ChatIcon from '@mui/icons-material/Chat';
+import CloseIcon from '@mui/icons-material/Close';
+import IconButton from '@mui/material/IconButton';
+import Box from '@mui/material/Box';
+
 
 export function ChatBotWidget(props) {
 	const [opened, setOpened] = useState(false);
 
-	// const header = headerComponent || (
-	// <Header className="rsc-header">
-	// 	<HeaderTitle className="rsc-header-title">{headerTitle}</HeaderTitle>
-	// 	{floating && (
-	// 	<HeaderIcon className="rsc-header-close-button" onClick={() => this.toggleChatBot(false)}>
-	// 		<CloseIcon />
-	// 	</HeaderIcon>
-	// 	)}
-	// </Header>
-	// );
+	const height = '520px';
+	const width = '350px';
+
+	const header = (
+		<Header className="rsc-header">
+			<HeaderTitle className="rsc-header-title">
+				<Box
+					component="img"
+					sx={{
+						height: 24,
+						width: 24,
+						maxHeight: { xs: 32, md: 32 },
+						maxWidth: { xs: 32, md: 32 },
+					}}
+					alt="Abot"
+					src="/abot-chat.png"
+				/>
+				{"Abot chat"}
+			</HeaderTitle>
+
+			<IconButton onClick={() => setOpened(false)}><CloseIcon /></IconButton>
+		</Header>
+	);
 
 	return (
 		<div>
@@ -21,10 +39,22 @@ export function ChatBotWidget(props) {
 				className="rsc-float-button"
 				style={{}}
 				opened={opened}
-				onClick={() => toggleChatBot(true)}>
-				{<FloatingIcon src={<ChatIcon />} />}
+				onClick={() => setOpened(true)}>
+				{<ChatIcon />}
 			</FloatButton>
+
+			<ChatBotContainer
+				className="rsc-container"
+				floating={true}
+				floatingStyle={{}}
+				opened={opened}
+				style={{}}
+				width={width}
+				height={height}
+			>
+				{header}
+				<iframe width="100%" height="100%" src="https://www.google.com/"></iframe>
+			</ChatBotContainer>
 		</div>
 	);
 }
-  
