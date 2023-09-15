@@ -53,7 +53,7 @@ export function ChatBotWidget(props) {
 				height={height}
 			>
 				{header}
-				<iframe width="100%" height="100%" src="https://www.google.com/"></iframe>
+				<iframe width="100%" height="100%" src="https://abot-app-4szu5khfbazlmqzcrxqvs4.streamlit.app/"></iframe>
 			</ChatBotContainer>
 		</div>
 	);
